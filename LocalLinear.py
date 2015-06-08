@@ -11,7 +11,7 @@
 #****************************************************************/
 
 from sklearn.manifold import Isomap, SpectralEmbedding, LocallyLinearEmbedding, MDS
-from ..analytics import Algorithm 
+from analytics.utils import Algorithm 
 
 import time, os
 import numpy as np

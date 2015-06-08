@@ -10,7 +10,7 @@
 # permission of the Georgia Tech Research Institute.
 #****************************************************************/
 
-from ..analytics import Algorithm 
+from analytics.utils import Algorithm 
 
 import time, os
 import numpy as np
