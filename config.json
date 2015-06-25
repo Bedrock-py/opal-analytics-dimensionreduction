@@ -1,0 +1,14 @@
+{   "opal-analytics-dimensionreduction": 
+        {
+            "description": "Default dimension reduction algorithms",
+            "host": "github.gatech.edu",
+            "repo": "Bedrock/opal-analytics-dimensionreduction.git",
+            "units": "Centroid.py DiffusionMaps.py Gda.py IsomapDR.py KernelPca.py Lda.py LocalLinear.py Mds.py Pca.py Spectral.py Tsne.py",
+            "supports": "",
+            "python_dependencies": "numpy sklearn",
+            "system_dependencies": "",
+            "api": "analytics",
+            "interface": "analytics",
+            "installation_script": ""
+        }
+}
