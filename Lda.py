@@ -10,7 +10,7 @@
 # permission of the Georgia Tech Research Institute.
 #****************************************************************/
 
-from analytics.utils import Algorithm 
+from analytics.utils import * 
 from sklearn.lda import LDA
 
 import time, os
@@ -21,8 +21,8 @@ import numpy as np
 class Lda(Algorithm):
     def __init__(self):
         super(Lda, self).__init__()
-        self.parameters =['numDim','truthlabels']
-        self.inputs = ['matrix.csv','assignments.csv']
+        self.parameters =['numDim']
+        self.inputs = ['matrix.csv','assignments.csv', 'truth_labels.csv']
         self.outputs = ['matrix.csv']
         self.name ='Linear Discriminant Analysis'
         self.type = 'Dimension Reduction'
@@ -33,6 +33,8 @@ class Lda(Algorithm):
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
         
         print 'lda started...'
+        X = self.inputData.T
+        self.truthlabels = np.genfromtxt(filepath['truth_labels.csv']['rootdir'] + 'truth_labels.csv', delimiter=',')
 #        self.truthlabels = self.data.getProcessedMatrix(self.encOptString).getTruthlabels()
         uniqueLabels = np.unique(self.truthlabels)
         uniqueLabelsLength = len(uniqueLabels)
