@@ -12,7 +12,7 @@
 
 
 from sklearn.manifold import Isomap, SpectralEmbedding, LocallyLinearEmbedding, MDS
-from analytics.utils import Algorithm 
+from analytics.utils import * 
 import numpy as np
 
 class Mds(Algorithm):

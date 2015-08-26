@@ -10,7 +10,7 @@
 # permission of the Georgia Tech Research Institute.
 #****************************************************************/
 
-from analytics.utils import Algorithm 
+from analytics.utils import * 
 from sklearn.manifold import SpectralEmbedding
 import numpy as np
 
