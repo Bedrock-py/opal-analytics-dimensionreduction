@@ -11,36 +11,28 @@
 #****************************************************************/
 
 from analytics.utils import Algorithm 
-
-import time, os
 import numpy as np
-
 
 class DiffusionMaps(Algorithm):
     def __init__(self):
         super(DiffusionMaps, self).__init__()
         self.parameters = ['numDim','timeStep','sigma']
-#        self.timeStep = 1
-#        self.sigma = 1
         self.inputs = ['matrix.csv']
         self.outputs = ['matrix.csv']
         self.name ='Diffusion Maps'
         self.type = 'Dimension Reduction'
         self.description = 'Performs diffusion maps dimension reduction on the input dataset.'
         self.parameters_spec = [ { "name" : "Dimensions", "attrname" : "numDim", "value" : 2, "type" : "input" , "step": 1, "max": 15, "min": 1},
-    { "name" : "Timestep", "attrname" : "timeStep", "value" : 1, "type" : "input" , "step": 1, "max": 15, "min": 1},
-    { "name" : "Sigma", "attrname" : "sigma", "value" : 1, "type" : "input" , "step": 1, "max": 15, "min": 1} ]
+            { "name" : "Timestep", "attrname" : "timeStep", "value" : 1, "type" : "input" , "step": 1, "max": 15, "min": 1},
+            { "name" : "Sigma", "attrname" : "sigma", "value" : 1, "type" : "input" , "step": 1, "max": 15, "min": 1} ]
         
     def compute(self, filepath, **kwargs):
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
-
         X = self.inputData        
-        
         if np.size(X, axis=0) > 3000:
             numSamples = np.size(X, axis=0)
             print "Due to the large number of instances = %d, diffusion maps may run out of memory" \
             % numSamples
-        
         # assume X being an array and normalize X    
         #X = np.double(X)
         xVector = X.flatten(1)

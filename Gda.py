@@ -11,18 +11,13 @@
 #****************************************************************/
 
 from analytics.utils import Algorithm 
-
-import time, os
 import numpy as np
-
-
 """
 Created on Mon Oct 14 14:06:01 2013
 
 @author: thuang38
 Note: Complex data not yet tested
 """
-
 
 class Gda(Algorithm):
     def __init__(self):
@@ -40,26 +35,13 @@ class Gda(Algorithm):
         
     def compute(self, filepath, **kwargs):
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
-        try:
-            self.numDim
-            self.kernelFun
-	    self.truthlabels = truthlabels
-
-        except NameError:
-            print 'Necessary attribute(s) not initialized'
-            
-        print 'gda started...'
         self.truthlabels = np.genfromtxt(filepath['truth_labels.csv']['rootdir'] + 'truth_labels.csv', delimiter=',')
-
-        # perform GDA
     
         # increment label if 0 is included as a label so the labeling starts with 1
         if np.min(self.truthlabels) == 0:
             self.truthlabels = np.array(self.truthlabels)
             self.truthlabels = self.truthlabels + 1
-        
         numSamples = np.size(self.inputData, axis=0)
-    
         numClass = np.max(self.truthlabels)
     
         # sort data according to labels
@@ -68,11 +50,9 @@ class Gda(Algorithm):
         self.inputData = self.inputData[sortIndex,:]
     
         # compute kernel matrix
-        print "Computing kernel matrix..."
         gramMatrix = self.gram(self.inputData, self.inputData, self.kernelFun, self.param1, self.param2)
     
         # Perform eigenvector decomposition of kernel matrix (Kc = P * gamma * P')
-        print "Performing eigendecomposition of kernel matrix..."
         gramMatrix[np.isnan(gramMatrix)] = 0
         gramMatrix[np.isinf(gramMatrix)] = 0
     
@@ -114,9 +94,7 @@ class Gda(Algorithm):
         if reducedDimOrig > reducedDim:
             print "Warning: Target dimensionality reduced to %d" % reducedDim
         
-        # perform eigendecomposition of matrix (eigVector.T*diagonalMatrix*eigVector) 
-        print "Performing GDA eigen-analysis..."
-    
+        # perform eigendecomposition of matrix (eigVector.T*diagonalMatrix*eigVector)     
         diagonalMatrix = np.matrix(diagonalMatrix)
         newMatrix = (eigVector.T) * diagonalMatrix * eigVector
         eigValueNew, eigVectorNew = np.linalg.eig(newMatrix)
@@ -138,35 +116,28 @@ class Gda(Algorithm):
 
     def gram(self, X1, X2, kernelFun="linear", param1=1, param2=3):
         # This function computes the Gram matrix
-
         # assume X1 and X2 are matrices
         X1 = np.matrix(X1)
         X2 = np.matrix(X2)
-
         # check size
         if np.size(X1, axis=1) != np.size(X2, axis=1):
             print "Error: Dimensionality of both datasets should be equal"
-            return
-            
+            return   
         if kernelFun == 'linear':
             # linear kernel
             gramMatrix = X1 * (X2.T)
-            
         elif kernelFun == 'gauss':
             # gaussian kernel
             distance = L2_distance.L2_distance(X1.T, X2.T)
             distanceSquare = np.power(distance, 2)
             gramMatrix = np.exp(-1*(distanceSquare / (2*pow(param1,2))))
-            
         elif kernelFun == 'poly':
             # polynomial kernel
             X1TimesX2 = X1 * (X2.T)
             gramMatrix = np.power(X1TimesX2+param1, param2)
-            
         else:
             print "Error: Unknown kernel function"
             return
-        
         return gramMatrix
 
     def L2_distance(self, X1, X2, df="False"):

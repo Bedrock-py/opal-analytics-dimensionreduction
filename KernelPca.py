@@ -14,7 +14,6 @@ from analytics.utils import Algorithm
 from sklearn.decomposition import KernelPCA
 import numpy as np
 
-
 class KernelPca(Algorithm):
     def __init__(self):
         super(KernelPca, self).__init__()
@@ -31,12 +30,7 @@ class KernelPca(Algorithm):
             { "name" : "Function", "attrname" : "function", "value" : "rbf", "type" : "select", "options": ['rbf', 'linear','poly','sigmoid','cosine','precomputed'] }] 
         
     def compute(self, filepath, **kwargs):
-
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
-
-        #surround with try/except to send helpful error message to user
-        print 'kernel pca started...'
         kernelPcaResult = KernelPCA(n_components=self.numDim, kernel=self.function, degree=self.degree, gamma=self.gamma)
         self.computedData = kernelPcaResult.fit_transform(self.inputData)
-        print 'done with kernel pca!'
         self.results = {'matrix.csv': self.computedData}

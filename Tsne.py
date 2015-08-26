@@ -11,10 +11,8 @@
 #****************************************************************/
 
 from analytics.utils import Algorithm 
-import time, os
 import numpy as np
 from sklearn.decomposition import PCA
-
 
 class Tsne(Algorithm):
     def __init__(self):
@@ -22,7 +20,6 @@ class Tsne(Algorithm):
         self.parameters = ['numDim','perplexity']
         self.initialReducedDim = 3
         self.initializeSolution = True
-#        self.perplexity = 15.0
         self.isIter = True
         self.inputs = ['matrix.csv']
         self.outputs = ['matrix.csv']
@@ -32,22 +29,16 @@ class Tsne(Algorithm):
         self.parameters_spec = [ { "name" : "Dimensions", "attrname" : "numDim", "value" : 2, "type" : "input" , "step": 1, "max": 15, "min": 1},
             { "name" : "Perplexity", "attrname" : "perplexity", "value" : 15, "type" : "input" , "step": 1, "max": 30, "min": 1}  ]
 
-
     def compute(self, filepath, **kwargs):
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
-
-        #surround with try/except to send helpful error message to user
-        print 'tsne started...'
         # Check inputs
         if self.inputData.dtype != "float64":
             print "Error: array X should have type float64."
             return -1
-        
         (n, d) = self.inputData.shape; 
         if self.initialReducedDim > d or self.numDim > d:
             print "Error: Both initialReducedDim and reducedDim specified cannot be greater than dimension of the data"
             return
-
         self.inputData = self.inputData - np.amin(self.inputData)
         self.inputData = self.inputData / np.amax(self.inputData)
     
@@ -60,12 +51,10 @@ class Tsne(Algorithm):
         eta = 500
         min_gain = 0.01
         tol = 1e-5
-    
         if self.initializeSolution:
             Y = self.inputData[:, 0:self.numDim]
         else:
             Y = .0001 * np.random.randn(n, self.numDim)
-        
         dY = np.zeros((n, self.numDim))
         iY = np.zeros((n, self.numDim))
         gains = np.ones((n, self.numDim))
@@ -82,7 +71,6 @@ class Tsne(Algorithm):
         # Run iterations
         iter = 0;
         
-        #while the user has not paused the algorithm and while there are still iterations to be run...
         while iter<=max_iter:
           # Compute pairwise affinities
             sum_Y = np.sum(np.square(Y), 1)
@@ -96,7 +84,6 @@ class Tsne(Algorithm):
             for i in range(n):
                 dY[i,:] = np.sum(np.tile(PQ[:,i] * num[:,i], (self.numDim, 1)).T * (Y[i,:] - Y), 0)
                 
-            #gains = (gains + 0.2) * ((dY > 0) != (iY > 0)) + (gains * 0.8) * ((dY > 0) == (iY > 0));
             gains = (gains + 0.2) * (np.sign(dY) != np.sign(iY)) + \
             (gains * 0.8) * (np.sign(dY) == np.sign(iY))
             gains[gains < min_gain] = min_gain;
@@ -120,8 +107,6 @@ class Tsne(Algorithm):
             iter += 1
         self.computedData = Y.real
         self.results = {'matrix.csv': self.computedData}
-
-
 
     def Hbeta(self, D, beta = 1.0):
         """Compute the perplexity and the P-row for a specific value of the 

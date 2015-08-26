@@ -11,8 +11,6 @@
 #****************************************************************/
 
 from analytics.utils import Algorithm 
-
-import time, os
 import numpy as np
 
 class Centroid(Algorithm):
@@ -28,21 +26,14 @@ class Centroid(Algorithm):
         
     def compute(self, filepath, **kwargs):
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
-        print 'centroid started...'
-        # perform Centroid method
-    
-        # transpose data
+            # transpose data
         X = self.inputData.T
-    
         self.truthlabels = np.genfromtxt(filepath['truth_labels.csv']['rootdir'] + 'truth_labels.csv', delimiter=',')
-
         # increment label if 0 is included as a label so the labeling starts with 1
         if min(self.truthlabels) == 0:
             self.truthlabels = self.truthlabels + 1
-            
         uniqueLabels = np.unique(self.truthlabels)
         uniqueLabelsLength = len(uniqueLabels)
-        
         
         # initialize the Centroid matrix
         numVariables = np.size(X, axis=0)

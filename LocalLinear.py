@@ -12,8 +12,6 @@
 
 from sklearn.manifold import Isomap, SpectralEmbedding, LocallyLinearEmbedding, MDS
 from analytics.utils import Algorithm 
-
-import time, os
 import numpy as np
 
 
@@ -27,11 +25,10 @@ class LocalLinear(Algorithm):
         self.type = 'Dimension Reduction'
         self.description = 'Performs local linear embedding dimension reduction on the input dataset.'
         self.parameters_spec = [ { "name" : "Dimensions", "attrname" : "numDim", "value" : 2, "type" : "input" , "step": 1, "max": 15, "min": 1},
-    { "name" : "Neighbors", "attrname" : "neighbors", "value" : 30, "type" : "input" , "step": 1, "max": 1000, "min": 1} ]
+            { "name" : "Neighbors", "attrname" : "neighbors", "value" : 30, "type" : "input" , "step": 1, "max": 1000, "min": 1} ]
         
     def compute(self, filepath, **kwargs):
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
-        print 'local linear started...'
         #using eigen_solver='auto' causes the algorithm to crash
         localLinearEmbeddingResult = LocallyLinearEmbedding(n_neighbors=self.neighbors, n_components=self.numDim, eigen_solver='dense', method="ltsa", neighbors_algorithm='auto')
         self.computedData = localLinearEmbeddingResult.fit_transform(self.inputData)        

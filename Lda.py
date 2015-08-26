@@ -12,11 +12,7 @@
 
 from analytics.utils import Algorithm 
 from sklearn.lda import LDA
-
-import time, os
 import numpy as np
-
-
 
 class Lda(Algorithm):
     def __init__(self):
@@ -31,9 +27,6 @@ class Lda(Algorithm):
 
     def compute(self, filepath, **kwargs):
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
-        
-        print 'lda started...'
-#        self.truthlabels = self.data.getProcessedMatrix(self.encOptString).getTruthlabels()
         uniqueLabels = np.unique(self.truthlabels)
         uniqueLabelsLength = len(uniqueLabels)
         if self.numDim >= uniqueLabelsLength:

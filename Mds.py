@@ -13,10 +13,7 @@
 
 from sklearn.manifold import Isomap, SpectralEmbedding, LocallyLinearEmbedding, MDS
 from analytics.utils import Algorithm 
-
-import time, os
 import numpy as np
-
 
 class Mds(Algorithm):
     def __init__(self):
@@ -31,8 +28,6 @@ class Mds(Algorithm):
         
     def compute(self, filepath, **kwargs):
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
-            
-        print 'mds started...'
         multidimensionalScalingResult = MDS(n_components=self.numDim)
         self.computedData = multidimensionalScalingResult.fit_transform(self.inputData)
         self.results = {'matrix.csv': self.computedData}

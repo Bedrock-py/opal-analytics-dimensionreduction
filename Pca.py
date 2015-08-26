@@ -11,11 +11,8 @@
 #****************************************************************/
 
 from analytics.utils import Algorithm 
-
-import time, os
 from sklearn.decomposition import PCA
 import numpy as np
-
 
 class Pca(Algorithm):
     def __init__(self):
@@ -36,9 +33,6 @@ class Pca(Algorithm):
             self.features.pop()
         if int(self.numDim) != len(self.features):
             self.features = [str(x + 1) for x in range(int(self.numDim))]
-
-
-        print 'pca started...'
         pcaResult = PCA(n_components=int(self.numDim), copy=True, whiten=False)
         self.computedData = pcaResult.fit_transform(self.inputData)
         self.results = {'matrix.csv': self.computedData, 'features.txt': self.features}
