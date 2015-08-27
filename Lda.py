@@ -18,7 +18,7 @@ class Lda(Algorithm):
     def __init__(self):
         super(Lda, self).__init__()
         self.parameters =['numDim']
-        self.inputs = ['matrix.csv','assignments.csv', 'truth_labels.csv']
+        self.inputs = ['matrix.csv', 'truth_labels.csv']
         self.outputs = ['matrix.csv']
         self.name ='Linear Discriminant Analysis'
         self.type = 'Dimension Reduction'
