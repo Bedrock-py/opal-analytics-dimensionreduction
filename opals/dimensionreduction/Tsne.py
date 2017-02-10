@@ -10,7 +10,7 @@
 # permission of the Georgia Tech Research Institute.
 #****************************************************************/
 
-from analytics.utils import Algorithm 
+from bedrock.analytics.utils import Algorithm 
 import numpy as np
 from sklearn.decomposition import PCA
 

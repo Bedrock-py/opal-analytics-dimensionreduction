@@ -10,29 +10,24 @@
 # permission of the Georgia Tech Research Institute.
 #****************************************************************/
 
-from analytics.utils import * 
-from sklearn.lda import LDA
+from bedrock.analytics.utils import * 
+from sklearn.manifold import SpectralEmbedding
 import numpy as np
 
-class Lda(Algorithm):
+class Spectral(Algorithm):
     def __init__(self):
-        super(Lda, self).__init__()
-        self.parameters =['numDim']
-        self.inputs = ['matrix.csv', 'truth_labels.csv']
+        super(Spectral, self).__init__()
+        self.parameters=['numDim']
+        self.inputs = ['matrix.csv']
         self.outputs = ['matrix.csv']
-        self.name ='Linear Discriminant Analysis'
+        self.name ='Spectral Embedding'
         self.type = 'Dimension Reduction'
-        self.description = 'Performs linear discriminant dimension reduction on the input dataset.'
+        self.description = 'Performs spectral embedding dimension reduction on the input dataset.'
         self.parameters_spec = [ { "name" : "Dimensions", "attrname" : "numDim", "value" : 2, "type" : "input" , "step": 1, "max": 15, "min": 1} ]
 
     def compute(self, filepath, **kwargs):
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
-        self.truthlabels = np.genfromtxt(filepath['truth_labels.csv']['rootdir'] + 'truth_labels.csv', delimiter=',')
-        uniqueLabels = np.unique(self.truthlabels)
-        uniqueLabelsLength = len(uniqueLabels)
-        if self.numDim >= uniqueLabelsLength:
-            self.numDim = uniqueLabelsLength - 1
-        ldaResult = LDA(n_components=self.numDim)
-        self.truthlabels = np.array(self.truthlabels)
-        self.computedData = ldaResult.fit_transform(self.inputData, y=self.truthlabels)
+        spectralEmbeddingResult = SpectralEmbedding(n_components=self.numDim, affinity='rbf', eigen_solver='arpack')
+        self.computedData = spectralEmbeddingResult.fit_transform(self.inputData)
         self.results = {'matrix.csv': self.computedData}
+

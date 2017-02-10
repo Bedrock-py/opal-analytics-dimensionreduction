@@ -10,24 +10,26 @@
 # permission of the Georgia Tech Research Institute.
 #****************************************************************/
 
-
 from sklearn.manifold import Isomap, SpectralEmbedding, LocallyLinearEmbedding, MDS
-from analytics.utils import * 
+from bedrock.analytics.utils import * 
 import numpy as np
 
-class Mds(Algorithm):
+
+class LocalLinear(Algorithm):
     def __init__(self):
-        super(Mds, self).__init__()
-        self.parameters = ['numDim']
+        super(LocalLinear, self).__init__()
+        self.parameters = ['numDim','neighbors']
         self.inputs = ['matrix.csv']
         self.outputs = ['matrix.csv']
-        self.name ='Multidimensional Scaling'
+        self.name ='Local Linear Embedding'
         self.type = 'Dimension Reduction'
-        self.description = 'Performs multidimensional scaling dimension reduction on the input dataset.'
-        self.parameters_spec = [ { "name" : "Dimensions", "attrname" : "numDim", "value" : 2, "type" : "input" , "step": 1, "max": 15, "min": 1} ]
+        self.description = 'Performs local linear embedding dimension reduction on the input dataset.'
+        self.parameters_spec = [ { "name" : "Dimensions", "attrname" : "numDim", "value" : 2, "type" : "input" , "step": 1, "max": 15, "min": 1},
+            { "name" : "Neighbors", "attrname" : "neighbors", "value" : 30, "type" : "input" , "step": 1, "max": 1000, "min": 1} ]
         
     def compute(self, filepath, **kwargs):
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
-        multidimensionalScalingResult = MDS(n_components=self.numDim)
-        self.computedData = multidimensionalScalingResult.fit_transform(self.inputData)
+        #using eigen_solver='auto' causes the algorithm to crash
+        localLinearEmbeddingResult = LocallyLinearEmbedding(n_neighbors=self.neighbors, n_components=self.numDim, eigen_solver='dense', method="ltsa", neighbors_algorithm='auto')
+        self.computedData = localLinearEmbeddingResult.fit_transform(self.inputData)        
         self.results = {'matrix.csv': self.computedData}

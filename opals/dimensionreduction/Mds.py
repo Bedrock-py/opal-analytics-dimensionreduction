@@ -10,24 +10,24 @@
 # permission of the Georgia Tech Research Institute.
 #****************************************************************/
 
-from analytics.utils import * 
-from sklearn.manifold import SpectralEmbedding
+
+from sklearn.manifold import Isomap, SpectralEmbedding, LocallyLinearEmbedding, MDS
+from bedrock.analytics.utils import * 
 import numpy as np
 
-class Spectral(Algorithm):
+class Mds(Algorithm):
     def __init__(self):
-        super(Spectral, self).__init__()
-        self.parameters=['numDim']
+        super(Mds, self).__init__()
+        self.parameters = ['numDim']
         self.inputs = ['matrix.csv']
         self.outputs = ['matrix.csv']
-        self.name ='Spectral Embedding'
+        self.name ='Multidimensional Scaling'
         self.type = 'Dimension Reduction'
-        self.description = 'Performs spectral embedding dimension reduction on the input dataset.'
+        self.description = 'Performs multidimensional scaling dimension reduction on the input dataset.'
         self.parameters_spec = [ { "name" : "Dimensions", "attrname" : "numDim", "value" : 2, "type" : "input" , "step": 1, "max": 15, "min": 1} ]
-
+        
     def compute(self, filepath, **kwargs):
         self.inputData = np.genfromtxt(filepath['matrix.csv']['rootdir'] + 'matrix.csv', delimiter=',')
-        spectralEmbeddingResult = SpectralEmbedding(n_components=self.numDim, affinity='rbf', eigen_solver='arpack')
-        self.computedData = spectralEmbeddingResult.fit_transform(self.inputData)
+        multidimensionalScalingResult = MDS(n_components=self.numDim)
+        self.computedData = multidimensionalScalingResult.fit_transform(self.inputData)
         self.results = {'matrix.csv': self.computedData}
-
